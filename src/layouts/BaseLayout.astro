@@ -1,0 +1,47 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import Seo from '../components/Seo.astro';
+import { ADS, SITE } from '../config/site.ts';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, jsonLd } = Astro.props;
+const adsLive = ADS.enabled && ADS.publisherId !== '';
+---
+
+<!doctype html>
+<html lang={SITE.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <Seo title={title} description={description} jsonLd={jsonLd} />
+    {
+      adsLive && (
+        <script
+          is:inline
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS.publisherId}`}
+          crossorigin="anonymous"
+        />
+      )
+    }
+  </head>
+  <body>
+    <div class="layout">
+      <Header />
+      <main>
+        <div class="container">
+          <slot />
+        </div>
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

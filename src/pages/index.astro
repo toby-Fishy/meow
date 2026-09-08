@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { SITE } from '../config/site.ts';
+import { TOOLS } from '../tools/registry.ts';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.name,
+    url: SITE.url,
+    description: SITE.description,
+  },
+];
+---
+
+<BaseLayout title={SITE.name} description={SITE.description} jsonLd={jsonLd}>
+  <div class="prose">
+    <h1>{SITE.tagline}</h1>
+    <p>
+      Every tool here runs entirely inside your browser. Your files are never
+      sent anywhere, there is no sign-up, and once a page has loaded it keeps
+      working with no connection.
+    </p>
+  </div>
+
+  <ul class="tool-grid">
+    {
+      TOOLS.map((tool) => (
+        <li>
+          <a class="tool-card" href={`/tools/${tool.slug}/`}>
+            <h2 class="tool-card__name">
+              {tool.name} {tool.status === 'planned' && <span class="badge">Soon</span>}
+            </h2>
+            <p class="tool-card__tagline">{tool.tagline}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <AdSlot name="toolBottom" height={280} />
+</BaseLayout>

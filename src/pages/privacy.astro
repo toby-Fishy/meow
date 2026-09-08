@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config/site.ts';
+---
+
+<BaseLayout
+  title="Privacy"
+  description={`How ${SITE.name} handles your files and your data: the files never leave your browser, and here is exactly what that means.`}
+>
+  <div class="prose">
+    <h1>Privacy</h1>
+
+    <h2>Your files</h2>
+    <p>
+      The tools on this site run as JavaScript inside your own browser. When you
+      choose a file it is read into memory on your device, processed there, and
+      handed straight back to you. It is never uploaded, never stored, and never
+      seen by anyone else. Closing the tab discards it.
+    </p>
+
+    <h2>Advertising</h2>
+    <p>
+      This site is paid for by advertising. Ad networks set cookies and may use
+      them to show you more relevant ads. Your files are never part of that —
+      they are not readable by the ad code, which cannot see anything you drop
+      into a tool.
+    </p>
+
+    <h2>Analytics</h2>
+    <p>
+      We count page views to know which tools are worth building next. That
+      measurement records the page you visited, not what you did with it.
+    </p>
+  </div>
+</BaseLayout>

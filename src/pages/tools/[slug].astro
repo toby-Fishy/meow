@@ -1,0 +1,100 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import ToolShell from '../../components/ToolShell.tsx';
+import { SITE } from '../../config/site.ts';
+import { TOOLS, relatedTools, type Tool } from '../../tools/registry.ts';
+
+export const getStaticPaths = (() =>
+  TOOLS.map((tool) => ({ params: { slug: tool.slug }, props: { tool } }))) satisfies GetStaticPaths;
+
+interface Props {
+  tool: Tool;
+}
+
+const { tool } = Astro.props;
+const related = relatedTools(tool);
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: tool.name,
+    description: tool.description,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: tool.faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  },
+];
+---
+
+<BaseLayout title={tool.name} description={tool.description} jsonLd={jsonLd}>
+  <div class="prose">
+    <h1>{tool.name}</h1>
+    <p>{tool.tagline}</p>
+  </div>
+
+  <AdSlot name="toolTop" height={100} />
+
+  {
+    tool.status === 'live' ? (
+      <ToolShell client:load />
+    ) : (
+      <div class="prose">
+        <p>
+          <strong>{tool.name} is not built yet.</strong> The shared engine below
+          is running in its place, so you can see how every tool behaves: pick a
+          file and it is read, hashed and reported without ever leaving your
+          device.
+        </p>
+        <ToolShell client:load />
+      </div>
+    )
+  }
+
+  <AdSlot name="toolBottom" height={280} />
+
+  <section class="prose faq">
+    <h2>Questions</h2>
+    {
+      tool.faqs.map((faq) => (
+        <details class="faq__item">
+          <summary>{faq.question}</summary>
+          <p>{faq.answer}</p>
+        </details>
+      ))
+    }
+  </section>
+
+  <AdSlot name="inArticle" height={250} />
+
+  {
+    related.length > 0 && (
+      <section>
+        <h2>Related tools</h2>
+        <ul class="tool-grid">
+          {related.map((other) => (
+            <li>
+              <a class="tool-card" href={`/tools/${other.slug}/`}>
+                <h3 class="tool-card__name">{other.name}</h3>
+                <p class="tool-card__tagline">{other.tagline}</p>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <p class="prose"><a href="/">All {SITE.name} tools</a></p>
+</BaseLayout>

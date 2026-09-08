@@ -1,0 +1,12 @@
+---
+import { SITE } from '../config/site.ts';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <small>© {year} {SITE.name}</small>
+    <small>Every tool runs in your browser. Nothing is uploaded.</small>
+  </div>
+</footer>

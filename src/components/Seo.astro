@@ -1,0 +1,32 @@
+---
+import { SITE } from '../config/site.ts';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Structured data objects, emitted as ld+json. */
+  jsonLd?: Record<string, unknown>[];
+}
+
+const { title, description, jsonLd = [] } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
+const fullTitle = title === SITE.name ? title : `${title} — ${SITE.name}`;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:card" content="summary_large_image" />
+
+{
+  jsonLd.map((schema) => (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))
+}

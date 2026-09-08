@@ -1,0 +1,69 @@
+---
+import { ADS, type AdSlotName } from '../config/site.ts';
+
+interface Props {
+  name: AdSlotName;
+  /**
+   * Reserved height in pixels. The space is held whether or not an ad fills
+   * it, so nothing on the page moves when one arrives.
+   */
+  height?: number;
+  label?: string;
+}
+
+const { name, height = 250, label = 'Advertisement' } = Astro.props;
+
+const slotId = ADS.slots[name];
+const live = ADS.enabled && ADS.publisherId !== '' && slotId !== '';
+---
+
+<aside class="ad-slot" style={`--ad-height: ${height}px`} aria-label={label}>
+  <span class="ad-slot__label">{label}</span>
+  {
+    live ? (
+      <ins
+        class="adsbygoogle ad-slot__unit"
+        data-ad-client={ADS.publisherId}
+        data-ad-slot={slotId}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+    ) : (
+      <div class="ad-slot__placeholder">
+        Ad slot <code>{name}</code>
+      </div>
+    )
+  }
+</aside>
+
+<style>
+  .ad-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 2rem 0;
+  }
+
+  .ad-slot__label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* Height is reserved up front so a late-loading ad cannot shift the page. */
+  .ad-slot__unit,
+  .ad-slot__placeholder {
+    display: block;
+    min-height: var(--ad-height);
+  }
+
+  .ad-slot__placeholder {
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    color: var(--color-muted);
+    font-size: 0.875rem;
+  }
+</style>

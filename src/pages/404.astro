@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { TOOLS } from '../tools/registry.ts';
+---
+
+<BaseLayout title="Page not found" description="That page does not exist. Here are the tools that do.">
+  <div class="prose">
+    <h1>Page not found</h1>
+    <p>That address does not exist. These do:</p>
+  </div>
+
+  <ul class="tool-grid">
+    {
+      TOOLS.map((tool) => (
+        <li>
+          <a class="tool-card" href={`/tools/${tool.slug}/`}>
+            <h2 class="tool-card__name">{tool.name}</h2>
+            <p class="tool-card__tagline">{tool.tagline}</p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
