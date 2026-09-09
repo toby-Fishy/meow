@@ -4,10 +4,14 @@ import { SITE } from '../config/site.ts';
 
 <header class="site-header">
   <div class="container site-header__inner">
-    <a class="site-header__brand" href="/">{SITE.name}</a>
+    <a class="brand" href="/">
+      <span class="brand__mark" aria-hidden="true"></span>
+      {SITE.name}
+    </a>
     <nav class="site-nav" aria-label="Main">
-      <a href="/">All tools</a>
-      <a href="/privacy/">Privacy</a>
+      <a href="/tools/compress-image/">Compress</a>
+      <a href="/tools/convert-image/">Convert</a>
+      <a href="/tools/resize-image/">Resize</a>
     </nav>
   </div>
 </header>

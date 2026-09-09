@@ -12,6 +12,9 @@ export type ToolCategory = 'image' | 'pdf' | 'text';
 
 export type ToolStatus = 'live' | 'planned';
 
+/** Which set of controls a tool renders. Drives the shared image component. */
+export type ToolOperation = 'compress' | 'convert' | 'resize';
+
 export interface ToolFaq {
   /** Phrased the way a visitor would search it — these become FAQ rich results. */
   question: string;
@@ -29,6 +32,7 @@ export interface Tool {
   description: string;
   category: ToolCategory;
   status: ToolStatus;
+  operation: ToolOperation;
   /** File types the tool accepts, as input-accept values. Empty for non-file tools. */
   accepts: string[];
   faqs: ToolFaq[];
@@ -48,22 +52,28 @@ export const TOOLS: Tool[] = [
   {
     slug: 'compress-image',
     name: 'Compress Image',
-    tagline: 'Shrink JPG, PNG and WebP files without a visible quality drop.',
+    tagline: 'Make JPG, PNG and WebP files smaller without a visible quality drop.',
     description:
-      'Compress JPG, PNG and WebP images in your browser. Pick a target quality, preview the result, and download — your files are never uploaded.',
+      'Compress JPG, PNG and WebP images in your browser. Choose a quality level, see the saving before you commit, and download. Nothing is uploaded.',
     category: 'image',
-    status: 'planned',
+    status: 'live',
+    operation: 'compress',
     accepts: ['image/jpeg', 'image/png', 'image/webp'],
     faqs: [
       {
         question: 'Are my images uploaded to a server?',
         answer:
-          'No. The compression runs in your browser using a background worker, so the image data never leaves your device and works with no connection at all.',
+          'No. Compression runs inside your browser on a background thread, so the image data never leaves your device. Once the page has loaded it works with no connection at all.',
       },
       {
         question: 'How much smaller will my image get?',
         answer:
-          'Photographs typically drop by 60-80% at a quality setting of 80 with no visible difference. Screenshots and flat graphics compress further as PNG or WebP.',
+          'Photographs typically drop by 60-80% at quality 80 with no visible difference. Flat graphics and screenshots do better as PNG or WebP than as JPG.',
+      },
+      {
+        question: 'Why did my file get bigger?',
+        answer:
+          'Re-encoding an already-optimised image at a high quality setting can add bytes. Lower the quality, or convert to WebP, which is usually smaller than both JPG and PNG.',
       },
     ],
     related: ['convert-image', 'resize-image'],
@@ -71,22 +81,28 @@ export const TOOLS: Tool[] = [
   {
     slug: 'convert-image',
     name: 'Convert Image',
-    tagline: 'Change between JPG, PNG, WebP and AVIF in a couple of clicks.',
+    tagline: 'Move between JPG, PNG and WebP in a couple of clicks.',
     description:
-      'Convert images between JPG, PNG, WebP and AVIF directly in your browser. Batch convert several files at once, with no upload and no watermark.',
+      'Convert images between JPG, PNG and WebP right in your browser. Convert several files at once, with no upload, no watermark and no sign-up.',
     category: 'image',
-    status: 'planned',
-    accepts: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
+    status: 'live',
+    operation: 'convert',
+    accepts: ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/bmp'],
     faqs: [
       {
         question: 'Does converting an image lose quality?',
         answer:
-          'Converting to PNG is lossless. Converting to JPG, WebP or AVIF re-encodes the image, so you choose the quality level and can compare the result before downloading.',
+          'Converting to PNG is lossless. JPG and WebP re-encode the image, so you pick the quality level and can see the resulting file size before downloading.',
       },
       {
         question: 'Can I convert several images at once?',
         answer:
-          'Yes. Drop in as many files as you like and they are converted one after another, then downloaded together.',
+          'Yes. Drop in as many as you like. They are converted one after another and can be downloaded individually or all together.',
+      },
+      {
+        question: 'What happens to transparency when I convert to JPG?',
+        answer:
+          'JPG has no transparency, so transparent areas are filled with white. Convert to PNG or WebP instead if you need to keep them.',
       },
     ],
     related: ['compress-image', 'resize-image'],
@@ -96,20 +112,26 @@ export const TOOLS: Tool[] = [
     name: 'Resize Image',
     tagline: 'Set exact pixel dimensions, or scale by percentage.',
     description:
-      'Resize images to exact pixel dimensions or by percentage, in your browser. Keeps the aspect ratio, handles batches, and never uploads your files.',
+      'Resize images to exact pixel dimensions or by percentage, in your browser. The aspect ratio is locked by default, so nothing gets stretched.',
     category: 'image',
-    status: 'planned',
+    status: 'live',
+    operation: 'resize',
     accepts: ['image/jpeg', 'image/png', 'image/webp'],
     faqs: [
       {
         question: 'Will resizing distort my image?',
         answer:
-          'Not unless you ask it to. The aspect ratio is locked by default, so setting one dimension calculates the other automatically.',
+          'Not unless you ask it to. Setting one dimension calculates the other from the original aspect ratio, so the proportions are kept.',
       },
       {
         question: 'Can I make an image larger?',
         answer:
-          'You can, but enlarging cannot recover detail that is not in the original, so the result will look softer than the source.',
+          'You can, but enlarging cannot invent detail that is not in the original, so the result will look softer than the source.',
+      },
+      {
+        question: 'Does resizing also make the file smaller?',
+        answer:
+          'Almost always, and usually by a lot — half the width and half the height is a quarter of the pixels. It is often the most effective way to shrink a file.',
       },
     ],
     related: ['compress-image', 'convert-image'],

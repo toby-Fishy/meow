@@ -4,18 +4,18 @@ import { TOOLS } from '../tools/registry.ts';
 ---
 
 <BaseLayout title="Page not found" description="That page does not exist. Here are the tools that do.">
-  <div class="prose">
-    <h1>Page not found</h1>
-    <p>That address does not exist. These do:</p>
+  <div class="hero">
+    <h1>Not here.</h1>
   </div>
+  <p class="hero__lede">That address does not exist. These do:</p>
 
   <ul class="tool-grid">
     {
       TOOLS.map((tool) => (
         <li>
           <a class="tool-card" href={`/tools/${tool.slug}/`}>
-            <h2 class="tool-card__name">{tool.name}</h2>
-            <p class="tool-card__tagline">{tool.tagline}</p>
+            <span class="tool-card__name">{tool.name}</span>
+            <span class="tool-card__tagline">{tool.tagline}</span>
           </a>
         </li>
       ))

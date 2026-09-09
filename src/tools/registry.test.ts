@@ -16,6 +16,7 @@ const baseTool: Tool = {
   description: 'A'.repeat(100),
   category: 'image',
   status: 'live',
+  operation: 'compress',
   accepts: [],
   faqs: [{ question: 'Is this an example?', answer: 'Yes.' }],
   related: [],
