@@ -5,7 +5,18 @@
  */
 export const SITE = {
   name: 'Nowhere',
-  url: 'https://example.com',
+  /**
+   * Set SITE_URL in the host's build environment. Canonical URLs, Open Graph
+   * tags, robots.txt and the sitemap all derive from it, so a wrong value here
+   * quietly points search engines at the wrong domain.
+   */
+  url: process.env.SITE_URL ?? 'http://localhost:4321',
+  /**
+   * False when SITE_URL was never set. A build like that still runs, but its
+   * canonical URLs point at localhost, so it must not be indexed — a wrong
+   * canonical is far more damaging than a missing page.
+   */
+  configured: process.env.SITE_URL !== undefined,
   tagline: 'Your images go nowhere.',
   description:
     'Compress, convert and resize images entirely in your browser. Nothing is uploaded, nothing is stored, and every tool works offline.',

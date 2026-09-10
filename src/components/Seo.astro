@@ -17,6 +17,7 @@ const fullTitle = title === SITE.name ? title : `${title} — ${SITE.name}`;
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
+{!SITE.configured && <meta name="robots" content="noindex" />}
 
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content={SITE.name} />

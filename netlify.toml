@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Override in the Netlify UI with the real domain before going live.
+  SITE_URL = "http://localhost:4321"
